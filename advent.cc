@@ -14,7 +14,8 @@ namespace {
 
 constexpr int kHeight = 4;
 constexpr int kWidth = 6;
-constexpr int kNumKeys = kHeight * kWidth;
+static_assert(kWidth % 2 == 0, "width must be even");
+constexpr int kNumKeys = kHeight * (kWidth / 2);
 constexpr double kProbabilityOfEliteKey = 0.7;
 constexpr int kNumIndividuals = 1000;
 constexpr int kNumEliteIndividuals = 200;
@@ -118,7 +119,9 @@ Solution Individual::ToSolution() const {
     int x;
   } positions[kNumKeys];
   for (int k = 0; k < kNumKeys; k++) {
-    positions[k] = {key_[k], k / kWidth, k % kWidth};
+    int y = k / (kWidth / 2);
+    int x = 2 * (k % (kWidth / 2)) + y % 2;
+    positions[k] = {key_[k], y, x};
   }
   std::stable_sort(positions, positions + kNumKeys,
                    [](const KeyedPosition& lhs, const KeyedPosition& rhs) {
@@ -128,6 +131,7 @@ Solution Individual::ToSolution() const {
   for (int k = 0; k < kNumKeys; k++) {
     const KeyedPosition& p = positions[k];
     solution.day_[p.y][p.x] = k + 1;
+    solution.day_[p.y][kWidth - 1 - p.x] = kHeight * kWidth - k;
   }
   return solution;
 }
