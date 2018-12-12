@@ -21,11 +21,15 @@ constexpr int kNumEliteIndividuals = 200;
 constexpr int kNumMutants = 100;
 constexpr int kReportPeriod = 100;
 
-struct Solution {
+class Solution {
+ public:
   double Objective() const;
   void Print() const;
 
-  int day[kHeight][kWidth];
+ private:
+  friend class Individual;
+  Solution() = default;
+  int day_[kHeight][kWidth];
 };
 
 double Solution::Objective() const {
@@ -35,8 +39,8 @@ double Solution::Objective() const {
     for (int x1 = 0; x1 < kWidth; x1++) {
       for (int y2 = 0; y2 < kHeight; y2++) {
         for (int x2 = 0; x2 < kWidth; x2++) {
-          int day1 = day[y1][x1];
-          int day2 = day[y2][x2];
+          int day1 = day_[y1][x1];
+          int day2 = day_[y2][x2];
           if (day1 != day2) {
             objective +=
                 (kMax - std::hypot(x1 - x2, y1 - y2)) / std::abs(day1 - day2);
@@ -52,7 +56,7 @@ void Solution::Print() const {
   std::cout << "Objective: " << Objective() << '\n';
   for (int y = 0; y < kHeight; y++) {
     for (int x = 0; x < kWidth; x++) {
-      std::cout << std::setw(x == 0 ? 2 : 3) << day[y][x];
+      std::cout << std::setw(x == 0 ? 2 : 3) << day_[y][x];
     }
     std::cout << '\n';
   }
@@ -123,7 +127,7 @@ Solution Individual::ToSolution() const {
   Solution solution;
   for (int k = 0; k < kNumKeys; k++) {
     const KeyedPosition& p = positions[k];
-    solution.day[p.y][p.x] = k + 1;
+    solution.day_[p.y][p.x] = k + 1;
   }
   return solution;
 }
