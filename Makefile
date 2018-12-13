@@ -1,4 +1,4 @@
-CXXFLAGS=-std=c++11 -O3 -march=native
+CXXFLAGS=-std=c++11 -Wall -O3 -march=native
 
 all: advent branch_and_bound
 .PHONY: all
