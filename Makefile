@@ -9,6 +9,7 @@ fmt:
 	diff -u /dev/null advent.cc | fill-changed-comments
 	diff -u /dev/null advent.cc | squash-strings
 	clang-format -i --style=google advent.cc
+	yapf -i advent.py
 .PHONY: fmt
 
 spell:
